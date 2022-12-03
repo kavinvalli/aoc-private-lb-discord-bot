@@ -17,23 +17,18 @@ npm install
 ```
 
 3. Setup environment variables
-
-```sh
-cp .env.example .env
-```
-
-  1. App Name could be anything (optional)
-  2. Get your DISCORD_BOT_TOKEN and DISCORD_CLIENT_ID from [here](https://discord.com/developers/applications). More details [here](https://discordjs.guide/preparations/setting-up-a-bot-application.html#creating-your-bot).
-  3. For SESSION, follow the following steps.
-      1. Go to the [Private Leaderboards Page](https://adventofcode.com/2022/leaderboard/private) on adventofcode.com.
-      2. Click on **View** on the leaderboard you want the discord bot to run for.
-      3. Click on **API**, then click on **JSON**.
-      4. Now, right click on the page and click on **Inspect**.
-      5. Go to the **Network** tab.
-      6. Refresh the page.
-      7. On the table, click on the one which has a name ending in `.json` and type as `document`.
-      8. Scroll down, and in the **Request Headers** section, you will find a field that says `cookie`. Copy everything after `session=` and that is your SESSION.
-  4. PRIVATE_LEADERBOARD_ID: In step 3, after clicking on **JSON**, you visit a page. The URL would look something like this: `https://adventofcode.com/2022/leaderboard/private/view/1234567.json`. Here 1234567 is the PRIVATE_LEADERBOARD_ID.
+    1. App Name could be anything (optional)
+    2. Get your DISCORD_BOT_TOKEN and DISCORD_CLIENT_ID from [here](https://discord.com/developers/applications). More details [here](https://discordjs.guide/preparations/setting-up-a-bot-application.html#creating-your-bot).
+    3. For SESSION, follow the following steps.
+        1. Go to the [Private Leaderboards Page](https://adventofcode.com/2022/leaderboard/private) on adventofcode.com.
+        2. Click on **View** on the leaderboard you want the discord bot to run for.
+        3. Click on **API**, then click on **JSON**.
+        4. Now, right click on the page and click on **Inspect**.
+        5. Go to the **Network** tab.
+        6. Refresh the page.
+        7. On the table, click on the one which has a name ending in `.json` and type as `document`.
+        8. Scroll down, and in the **Request Headers** section, you will find a field that says `cookie`. Copy everything after `session=` and that is your SESSION.
+    4. PRIVATE_LEADERBOARD_ID: In step 3, after clicking on **JSON**, you visit a page. The URL would look something like this: `https://adventofcode.com/2022/leaderboard/private/view/1234567.json`. Here 1234567 is the PRIVATE_LEADERBOARD_ID.
 
 4. Run the App
    1. Development mode
