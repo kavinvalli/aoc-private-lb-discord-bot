@@ -12,6 +12,18 @@ import {
 import * as dotenv from 'dotenv';
 dotenv.config();
 
+if (
+  !process.env.DISCORD_BOT_TOKEN ||
+  !process.env.DISCORD_CLIENT_ID ||
+  !process.env.SESSION ||
+  !process.env.PRIVATE_LEADERBOARD_ID
+) {
+  console.error(
+    'Set env variables properly. Copy .env.example into .env and fill all the values.'
+  );
+  process.exit(1);
+}
+
 type Command = {
   data: SlashCommandBuilder;
   execute: (interaction: ChatInputCommandInteraction) => Promise<void>;
@@ -34,7 +46,10 @@ client.commands = new Collection();
 const command = {
   data: new SlashCommandBuilder()
     .setName('lb')
-    .setDescription('Shows private leaderboard of techCircuit'),
+    .setDescription(
+      'Shows private leaderboard' +
+        (process.env.appName ? ` of ${process.env.appName}` : '')
+    ),
   async execute(interaction: ChatInputCommandInteraction) {
     try {
       const data: {
@@ -50,7 +65,6 @@ const command = {
           }
         )
       ).json();
-      console.log(data);
       let members: {
         name: string;
         local_score: number;
@@ -60,7 +74,6 @@ const command = {
       }
       members.sort((a, b) => b.local_score - a.local_score);
       members = members.slice(0, 10);
-      console.log(members.map(member => member.local_score));
       const replyEmbed = new EmbedBuilder()
         .setTitle("techCircuit's AOC Leaderboard")
         .setDescription(
@@ -113,13 +126,10 @@ const commands = client.commands;
   try {
     console.log(`Started refreshing application (/) commands.`);
 
-    console.log(commands.map(command => command.data.toJSON()));
-
     await rest.put(
       Routes.applicationCommands(process.env.DISCORD_CLIENT_ID ?? ''),
       { body: commands.map(command => command.data.toJSON()) }
     );
-    console.log('Ho gaya shayad');
   } catch (error) {
     console.error(error);
   }
