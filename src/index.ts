@@ -61,6 +61,8 @@ const command = {
             headers: {
               'Content-Type': 'application/json',
               Cookie: 'session=' + process.env.SESSION,
+              'User-Agent':
+                'github.com/kavinvalli/aoc-private-lb-discord-bot by mail@kavin.me',
             },
           }
         )
