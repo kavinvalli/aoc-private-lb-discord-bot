@@ -10,6 +10,7 @@ import {
   SlashCommandBuilder,
 } from 'discord.js';
 import * as dotenv from 'dotenv';
+import fs from 'fs/promises';
 dotenv.config();
 
 if (
@@ -51,22 +52,52 @@ const command = {
         (process.env.appName ? ` of ${process.env.appName}` : '')
     ),
   async execute(interaction: ChatInputCommandInteraction) {
+    let dateString: string | null = null;
+    let throttleData: string | null = null;
     try {
-      const data: {
+      try {
+        const throttle = await fs.readFile('throttle.txt', {
+          encoding: 'utf-8',
+        });
+        const [d, t] = throttle.toString().split('\n');
+        dateString = d;
+        throttleData = t;
+      } catch (err) {
+        console.error('File does not exist');
+      }
+
+      let data: {
         members: Record<string, { name: string; local_score: number }>;
-      } = await (
-        await fetch(
-          `https://adventofcode.com/2022/leaderboard/private/view/${process.env.PRIVATE_LEADERBOARD_ID}.json`,
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              Cookie: 'session=' + process.env.SESSION,
-              'User-Agent':
-                'github.com/kavinvalli/aoc-private-lb-discord-bot by mail@kavin.me',
-            },
-          }
-        )
-      ).json();
+      };
+
+      if (
+        dateString &&
+        new Date(new Date(dateString).getTime() + 16 * 60000).getTime() >
+          new Date().getTime()
+      ) {
+        console.log('Throttle data');
+        data = JSON.parse(throttleData ?? '{}');
+      } else {
+        data = await (
+          await fetch(
+            `https://adventofcode.com/2022/leaderboard/private/view/${process.env.PRIVATE_LEADERBOARD_ID}.json`,
+            {
+              headers: {
+                'Content-Type': 'application/json',
+                Cookie: 'session=' + process.env.SESSION,
+                'User-Agent':
+                  'github.com/kavinvalli/aoc-private-lb-discord-bot by mail@kavin.me',
+              },
+            }
+          )
+        ).json();
+      }
+
+      await fs.writeFile(
+        'throttle.txt',
+        `${new Date()}\n${JSON.stringify(data)}`
+      );
+
       let members: {
         name: string;
         local_score: number;
