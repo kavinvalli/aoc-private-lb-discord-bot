@@ -106,7 +106,7 @@ const command = {
         members.push(data.members[key]);
       }
       members.sort((a, b) => b.local_score - a.local_score);
-      members = members.slice(0, Math.max(10, members.length));
+      members = members.slice(0, Math.min(10, members.length));
       const replyEmbed = new EmbedBuilder()
         .setTitle("techCircuit's AOC Leaderboard")
         .setDescription(
